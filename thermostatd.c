@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <syslog.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -202,7 +201,7 @@ void daemonize() {
         syslog(LOG_ERR, "fork failure");
         exit(1);
     } else if (pid > 0) {
-        return;
+        exit(0);
     }
 
     if (setsid() < -1) {
