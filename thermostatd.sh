@@ -1,16 +1,16 @@
-#!/bin/sh
+DAEMON_NAME="thermostatd"
 
 start() {
-    printf "thermostatd startup"
-    /usr/sbin/thermostatd
-    touch /var/lock/thermostatd
+    printf "Starting $DAEMON_NAME: "
+    /usr/sbin/$DAEMON_NAME
+    touch /var/lock/$DAEMON_NAME
     echo "OK"
 }
 
 stop() {
-    printf "thermostatd shutdown"
-    killall thermostatd
-    rm -f /var/lock/thermostatd
+    printf "Stopping $DAEMON_NAME: "
+    killall $DAEMON_NAME
+    rm -f /var/lock/$DAEMON_NAME
     echo "OK"
 }
 
