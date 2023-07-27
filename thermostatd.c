@@ -15,8 +15,8 @@
 
 #define TRUE (1)
 
-static const char *HEATER_ACTION_ON = "on";
-static const char *HEATER_ACTION_OFF = "off";
+static const char *HEATER_ACTION_ON = "ON";
+static const char *HEATER_ACTION_OFF = "OFF";
 static const char TEMP_FILE_PATH [] = "/tmp/temp";
 static const char THERM_FILE_PATH [] = "/tmp/status";
 static const char SERVER_URL [] = "http://18.220.79.28:8080/deviceTempProg";
@@ -66,21 +66,27 @@ size_t str_write(void *ptr, size_t size, size_t nmemb, struct string *s)
 void thermostatd_run() {
     while (TRUE) {
         // read temp file
+        syslog(LOG_INFO, "Reading temperature");
         char *temp_str = get_current_temp();
 
         if (!strcmp(temp_str, "FAILURE")) {
             // send request
+            syslog(LOG_INFO, "Sending request to server");
             int heater_on = send_server_request(temp_str);
 
             // write to temp programming file
             if (heater_on) {
+                syslog(LOG_INFO, "Turning heater on");
                 output_therm_status(HEATER_ACTION_ON);
             } else {
+                syslog(LOG_INFO, "Turning heater off");
                 output_therm_status(HEATER_ACTION_OFF);
             }
+        } else {
+            syslog(LOG_INFO, "Unable to read temperature");
         }
 
-        sleep(30);
+        sleep(5);
     }
 }
 
@@ -194,7 +200,7 @@ char *build_request_body(char *temp) {
 
 void daemonize() {
     openlog(DAEMON_NAME, LOG_PID | LOG_NDELAY | LOG_NOWAIT, LOG_DAEMON);
-    syslog(LOG_INFO, "iotd running");
+    syslog(LOG_INFO, "thermostatd starting");
     pid_t pid = fork();
 
     if (pid < 0) {
