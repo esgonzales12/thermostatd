@@ -8,6 +8,12 @@
 #include <curl/curl.h>
 #include <string.h>
 
+/**
+* Estefan Gonzales
+* Final project - Smart Thermostat Simulation
+* compilation command: gcc thermostatd.c -o therm -lcurl
+**/
+
 #define TRUE (1)
 
 static const char *HEATER_ACTION_ON = "on";
