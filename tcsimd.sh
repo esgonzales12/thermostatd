@@ -1,3 +1,5 @@
+#!/bin/sh
+
 DAEMON_NAME="tcsimd"
 
 start() {
