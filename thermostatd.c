@@ -69,7 +69,7 @@ void thermostatd_run() {
         syslog(LOG_INFO, "Reading temperature");
         char *temp_str = get_current_temp();
 
-        if (!strcmp(temp_str, "FAILURE")) {
+        if (strcmp(temp_str, "FAILURE") != 0) {
             // send request
             syslog(LOG_INFO, "Sending request to server");
             int heater_on = send_server_request(temp_str);
@@ -157,9 +157,10 @@ char *get_current_temp() {
     long file_size;
     char *temp_str;
 
-    temp_file = fopen(TEMP_FILE_PATH, "rb");
+    temp_file = fopen(TEMP_FILE_PATH, "r");
 
     if (temp_file != NULL) {
+        syslog(LOG_INFO, "successfully opened temp file");
         fseek(temp_file, 0, SEEK_END);
         file_size = ftell(temp_file);
         fseek(temp_file, 0, SEEK_SET);
